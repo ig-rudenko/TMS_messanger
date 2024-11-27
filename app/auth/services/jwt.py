@@ -3,20 +3,13 @@ from datetime import timedelta, datetime, UTC
 from jose import jwt, JWTError
 from fastapi.security import OAuth2PasswordBearer
 
-from app.schemas import TokenPairSchema
+from app.auth.schemas import TokenPairSchema
+from app.auth.services.exc import InvalidTokenError
 from app.settings import SECRET_KEY, ACCESS_TOKEN_EXPIRE_MINUTES, REFRESH_TOKEN_EXPIRE_HOURS
 
-auth_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/")
+auth_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token")
 ALGORITHM = "HS256"
 USER_IDENTIFIER = "user_id"
-
-
-class AuthError(Exception):
-    pass
-
-
-class InvalidTokenError(AuthError):
-    pass
 
 
 def create_token_pair(user_id: int) -> TokenPairSchema:
@@ -45,12 +38,12 @@ def _get_user_from_token(token: str) -> int:
     try:
         payload = jwt.decode(token, key=SECRET_KEY, algorithms=[ALGORITHM])
     except JWTError:
-        raise InvalidTokenError
+        raise InvalidTokenError("Invalid token")
 
     user_id = payload.get(USER_IDENTIFIER)
     if user_id is None:
-        raise InvalidTokenError
+        raise InvalidTokenError("User id is missing")
     if not isinstance(user_id, int):
-        raise InvalidTokenError
+        raise InvalidTokenError("User id is not an integer")
 
     return user_id

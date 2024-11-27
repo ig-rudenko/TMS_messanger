@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql.functions import func
 from sqlalchemy.sql.expression import false, true
 
-from .orm.base_model import BaseModel
+from app.orm.base_model import BaseModel
 
 
 class User(BaseModel):
@@ -16,8 +16,8 @@ class User(BaseModel):
     email: Mapped[str] = mapped_column(String(254))
     password: Mapped[str] = mapped_column(String(128))
 
-    first_name: Mapped[str] = mapped_column(String(150))
-    last_name: Mapped[str] = mapped_column(String(150))
+    first_name: Mapped[str] = mapped_column(String(150), nullable=True)
+    last_name: Mapped[str] = mapped_column(String(150), nullable=True)
 
     is_active: Mapped[bool] = mapped_column(server_default=true())
     is_staff: Mapped[bool] = mapped_column(server_default=false())

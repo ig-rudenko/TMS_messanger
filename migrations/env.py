@@ -5,7 +5,9 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from sqlalchemy import pool
 from alembic import context
 
-from app.models import User
+from app.auth.models import User
+from app.friendship.models import Friendship
+from app.chats.models import Message
 from app.orm.base_model import BaseModel
 from app.settings import DATABASE_URL
 
@@ -14,6 +16,8 @@ from app.settings import DATABASE_URL
 config = context.config
 
 print("Loaded model", User)
+print("Loaded model", Friendship)
+print("Loaded model", Message)
 
 db_url = config.get_main_option("sqlalchemy.url", None)
 if db_url is None:
