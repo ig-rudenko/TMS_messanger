@@ -32,6 +32,6 @@ async def get_user(token: str = Depends(auth_scheme), session: AsyncSession = De
     try:
         user = (await session.execute(query)).scalar_one()
     except NoResultFound:
-        raise InvalidCredentialsError("Пользователь не найден")
+        raise HTTPException(status_code=404, detail="Пользователь не найден")
 
     return user
